@@ -1,0 +1,107 @@
+/* === 1) Load the “Inter” font family === */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
+/* === Reset & Base === */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  font-family: 'Inter', sans-serif;
+  max-width: 960px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+  color: #111;
+  background: #fff;
+}
+
+/* 1) Make the <h2> a flex container for the two links */
+h2.site-nav {
+  display: flex;
+  gap: 2rem;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+/* 2) Style each link inside the <h2> */
+h2.site-nav a {
+  font-family: "Roboto", sans-serif;
+  font-size: 1.5rem;            /* bigger text */
+  font-weight: 800;             /* heavy bold */
+  color: #111;
+  text-decoration: none;
+
+  /* green underline that grows on hover */
+  background-image: linear-gradient(120deg, #98ff98 0%, #98ff98 100%);
+  background-repeat: no-repeat;
+  background-size: 0% 0.2em;     /* start hidden */
+  background-position: 0 100%;   /* pinned at bottom of text */
+  transition: background-size 0.25s ease-in;
+}
+
+/* 3) On hover, expand the underline from left → right */
+h2.site-nav a:hover {
+  background-size: 100% 0.2em;   /* full width underline */
+}
+
+
+/* === 2) Force 3-column grid === */
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+  margin-top: 1rem;
+}
+
+/* === 3) Card as full-block link === */
+.project-card {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+/* === 4) Image shadow – only right & bottom === */
+.project-card img {
+  width: 100%;
+  display: block;
+  /* subtle offset to the right & bottom, short blur */
+  box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* === 5) Hover: scale + deepen that same directional shadow === */
+.project-card:hover img {
+  transform: scale(1.05);
+  box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* === 6) Text styling with Inter weights === */
+h1 {
+  font-family: 'Inter', sans-serif;
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+.project-content h3 {
+  font-family: 'Inter', sans-serif;
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+.project-content p {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 400;
+  line-height: 1.4;
+}
+
+/* container to enforce max-width and auto-margins */
+.container {
+  max-width: 960px;    /* same as your body max-width before */
+  margin: 0 auto;      /* center it */
+  padding: 0 1rem;     /* small gutter on mobile */
+}
+
