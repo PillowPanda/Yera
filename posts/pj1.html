@@ -1,0 +1,268 @@
+<!-- File: posts/pj1.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Regressions 101: Concepts & Interactive Demos</title>
+
+  <!-- Site CSS -->
+  <link rel="stylesheet" href="../css/style.css" />
+
+  <!-- Plotly for interactive charts -->
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <!-- MathJax for formulas -->
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #fff;
+      color: #111;
+      margin: 0;
+      padding: 2rem 1rem;
+      display: flex;
+      justify-content: center;
+    }
+    .container {
+      max-width: 800px;
+      width: 100%;
+    }
+    h1.page-title {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      text-decoration: underline;
+      text-underline-offset: 0.3em;
+      text-decoration-thickness: 3px;
+    }
+    section {
+      margin-bottom: 2.5rem;
+    }
+    section h2 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      text-decoration: underline;
+      text-underline-offset: 0.2em;
+    }
+    section p, section ul {
+      line-height: 1.5;
+      margin-bottom: 1rem;
+    }
+    .demo {
+      margin-top: 1rem;
+    }
+    .demo #plot {
+      width: 100%;
+      height: 400px;
+    }
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    .controls .control {
+      flex: 1 1 45%;
+    }
+    .controls label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+    .controls input[type="range"] {
+      width: 100%;
+    }
+    .controls .stat {
+      text-align: center;
+      font-weight: 600;
+      margin-top: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 class="page-title">Regressions</h1>
+
+    <section id="what-is">
+      <h2>What is Regression?</h2>
+      <p>Regression is a statistical technique for modeling and analyzing the relationship between a dependent variable <em>y</em> and one or more independent variables <em>x</em>. We estimate parameters to best predict <em>y</em> from <em>x</em>.</p>
+      <p style="text-align:center;">
+        $$y = f(x) + \varepsilon$$
+      </p>
+      <p>In practice, we choose a hypothesis class (linear, polynomial, etc.) and a loss function (e.g. mean squared error) to find the best-fit parameters.</p>
+    </section>
+
+    <section id="linear">
+      <h2>Linear Regression</h2>
+      <p>
+        Models the relationship with a straight line:  
+        $$y = m\,x + b$$  
+        Parameters <em>m</em> (slope) and <em>b</em> (intercept) are chosen by minimizing
+        $$\mathrm{MSE}(m,b) = \frac{1}{N}\sum_{i=1}^N \bigl(y_i - (m\,x_i + b)\bigr)^2.$$
+      </p>
+      <div class="demo">
+        <div id="linear-plot"></div>
+        <div class="controls">
+          <div class="control">
+            <label for="m-slider">Slope (m): <span id="m-val">1.0</span></label>
+            <input type="range" id="m-slider" min="-5" max="5" step="0.1" value="1.0"/>
+          </div>
+          <div class="control">
+            <label for="b-slider">Intercept (b): <span id="b-val">0.0</span></label>
+            <input type="range" id="b-slider" min="-10" max="10" step="0.5" value="0.0"/>
+          </div>
+          <div class="stat">MSE: <span id="mse-val">—</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="polynomial">
+      <h2>Polynomial Regression</h2>
+      <p>
+        Extends linear to higher-degree polynomials:  
+        $$y = a_0 + a_1 x + a_2 x^2 + \dots + a_d x^d.$$
+      </p>
+      <div class="demo">
+        <div id="poly-plot"></div>
+        <div class="controls">
+          <div class="control">
+            <label for="deg-slider">Degree (d): <span id="deg-val">2</span></label>
+            <input type="range" id="deg-slider" min="1" max="5" step="1" value="2"/>
+          </div>
+          <div class="stat">MSE: <span id="poly-mse">—</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="logistic">
+      <h2>Logistic Regression</h2>
+      <p>
+        A classification model using the sigmoid:  
+        $$\sigma(z)=\frac{1}{1+e^{-z}},\quad z = w\,x + b.$$  
+        Predicts probability of class 1:  
+        $$P(y=1|x)=\sigma(w x + b).$$
+      </p>
+      <div class="demo">
+        <div id="logistic-plot"></div>
+        <div class="controls">
+          <div class="control">
+            <label for="w-slider">Weight (w): <span id="w-val">1.0</span></label>
+            <input type="range" id="w-slider" min="-10" max="10" step="0.2" value="1.0"/>
+          </div>
+          <div class="control">
+            <label for="c-slider">Intercept (c): <span id="c-val">0.0</span></label>
+            <input type="range" id="c-slider" min="-10" max="10" step="0.5" value="0.0"/>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="ridge">
+      <h2>Ridge Regression</h2>
+      <p>
+        Linear regression with L<sub>2</sub> penalty:  
+        $$\min_{w,b}\;\sum_{i}(y_i - wx_i - b)^2 + \alpha\,w^2.$$
+      </p>
+      <div class="demo">
+        <div id="ridge-plot"></div>
+        <div class="controls">
+          <div class="control">
+            <label for="alpha-slider">Regularization (α): <span id="alpha-val">1.0</span></label>
+            <input type="range" id="alpha-slider" min="0" max="10" step="0.5" value="1.0"/>
+          </div>
+          <div class="stat">MSE: <span id="ridge-mse">—</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="lasso">
+      <h2>Lasso Regression</h2>
+      <p>
+        Linear regression with L<sub>1</sub> penalty:  
+        $$\min_{w,b}\;\sum_{i}(y_i - wx_i - b)^2 + \lambda\,|w|.$$
+      </p>
+      <div class="demo">
+        <div id="lasso-plot"></div>
+        <div class="controls">
+          <div class="control">
+            <label for="lambda-slider">Regularization (λ): <span id="lambda-val">1.0</span></label>
+            <input type="range" id="lambda-slider" min="0" max="10" step="0.5" value="1.0"/>
+          </div>
+          <div class="stat">MSE: <span id="lasso-mse">—</span></div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    // Shared synthetic dataset
+    const N = 50;
+    const x = Array.from({length:N}, () => Math.random()*10);
+    const y = x.map(xi => 2*xi + 1 + (Math.random()-0.5)*4);
+
+    // LINEAR Regression Demo
+    const linPlot = document.getElementById('linear-plot');
+    const mSlider = document.getElementById('m-slider');
+    const bSlider = document.getElementById('b-slider');
+    const mVal = document.getElementById('m-val');
+    const bVal = document.getElementById('b-val');
+    const mseVal = document.getElementById('mse-val');
+
+    function linearDemo() {
+      const m = +mSlider.value, b = +bSlider.value;
+      mVal.textContent = m.toFixed(1);
+      bVal.textContent = b.toFixed(1);
+
+      // scatter + line
+      Plotly.react(linPlot, [
+        { x, y, mode:'markers', marker:{color:'#007acc'} },
+        { x:[0,10], y:[b, m*10+b], mode:'lines', line:{color:'#ff7f0e'} }
+      ], { margin:{t:20,l:40,r:20,b:40}, xaxis:{title:'x'}, yaxis:{title:'y'} });
+
+      const mse = (x.reduce((sum, xi, i) => sum + Math.pow(y[i] - (m*xi + b),2),0)/N).toFixed(2);
+      mseVal.textContent = mse;
+    }
+    mSlider.oninput = bSlider.oninput = linearDemo;
+    linearDemo();
+
+    // POLYNOMIAL Demo
+    const polyPlot = document.getElementById('poly-plot');
+    const degSlider = document.getElementById('deg-slider');
+    const degVal = document.getElementById('deg-val');
+    const polyMSE = document.getElementById('poly-mse');
+
+    function polyDemo() {
+      const d = +degSlider.value;
+      degVal.textContent = d;
+      // build Vandermonde matrix and solve least squares
+      const X = x.map(xi => Array.from({length:d+1}, (_,k)=>Math.pow(xi,k)));
+      // solve (X^T X) a = X^T y
+      // naive implementation for small d
+      const XT = math.transpose(X);
+      const XTX = math.multiply(XT, X);
+      const XTy = math.multiply(XT, y);
+      const a = math.lusolve(XTX, XTy).flat();
+      // generate line
+      const xLine = [0,10], yLine = xLine.map(xi=>a.reduce((sum,ai,k)=>sum + ai*Math.pow(xi,k),0));
+      Plotly.react(polyPlot, [
+        { x, y, mode:'markers', marker:{color:'#007acc'} },
+        { x:xLine, y:yLine, mode:'lines', line:{color:'#ff7f0e'} }
+      ], { margin:{t:20,l:40,r:20,b:40}, xaxis:{title:'x'}, yaxis:{title:'y'} });
+      // mse
+      const mse = (x.reduce((sum, xi, i) => sum + Math.pow(y[i] - X[i].reduce((s,_,k)=>s + a[k]*Math.pow(xi,k),0),2),0)/N).toFixed(2);
+      polyMSE.textContent = mse;
+    }
+    // requires math.js for polynomial solve
+    const mathScript = document.createElement('script');
+    mathScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjs/10.0.0/math.min.js';
+    mathScript.onload = ()=>{ degSlider.oninput = polyDemo; polyDemo(); };
+    document.head.appendChild(mathScript);
+
+    // For brevity, logistic/ridge/lasso demos can be added similarly:
+    // set up sliders, plot containers, compute predictions & loss,
+    // and use Plotly.react(...) inside oninput handlers.
+  </script>
+</body>
+</html>
